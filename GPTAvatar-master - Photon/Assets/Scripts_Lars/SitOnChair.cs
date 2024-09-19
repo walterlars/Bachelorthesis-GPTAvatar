@@ -201,6 +201,7 @@
 using UnityEngine;
 using System.Collections;
 using Fusion;
+using TMPro;
 
 public class SitOnChair : NetworkBehaviour
 {
@@ -214,6 +215,7 @@ public class SitOnChair : NetworkBehaviour
 
     [Networked]
     public NetworkBool IsSitting { get; set; }
+    private TextMeshProUGUI avatarURLText;
 
     private void Awake()
     {
@@ -221,6 +223,23 @@ public class SitOnChair : NetworkBehaviour
         _characterController = GetComponent<CharacterController>(); // Ensure the character has a CharacterController component
         _initialPosition = transform.position; // Store the initial position
         _initialRotation = transform.rotation; // Store the initial rotation
+    }
+
+        public string ExtractPartFromURL(string url)
+    {
+        // Define the prefix and suffix to search for
+        string prefix = "https://models.readyplayer.me/";
+        string suffix = ".glb";
+
+        // Find the starting index of the part to extract
+        int startIndex = url.IndexOf(prefix) + prefix.Length;
+        // Find the ending index of the part to extract
+        int endIndex = url.IndexOf(suffix);
+
+        // Extract the part between the prefix and suffix
+        string extractedPart = url.Substring(startIndex, endIndex - startIndex);
+
+        return extractedPart;
     }
 
     private IEnumerator SearchAnimatorWithDelay()
@@ -232,10 +251,11 @@ public class SitOnChair : NetworkBehaviour
 
         // Proceed to search for the Animator component
         GameObject root = this.gameObject;
-        loadAvatar = GetComponent<LoadAvatar>();
-        string avatarUrl = loadAvatar.GetAvatar();
+        Player player = GetComponent<Player>();
+        string avatarURLlong = player.AvatarURL.ToString();
+        string avatarUrl = ExtractPartFromURL(avatarURLlong);
+        
         Debug.LogError(avatarUrl);
-
         Transform avatarContainerTransform = root.transform.Find("AvatarContainer");
         if (avatarContainerTransform != null)
         {
@@ -284,28 +304,53 @@ public class SitOnChair : NetworkBehaviour
         }
     }
 
-    private void TrySitOnChair()
-    {
-        if (IsSitting || !animatorReady) return;
+    // private void TrySitOnChair()
+    // {
+    //     if (IsSitting || !animatorReady) return;
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionDistance);
-        foreach (var hitCollider in hitColliders)
+    //     Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionDistance);
+    //     foreach (var hitCollider in hitColliders)
+    //     {
+    //         if (hitCollider.CompareTag("Chair"))
+    //         {
+    //             Chair chair = hitCollider.GetComponent<Chair>();
+    //             if (chair != null && !chair.IsOccupied)
+    //             {
+    //                 Transform potentialChairPosition = hitCollider.transform.Find("ChairPosition");
+    //                 if (potentialChairPosition != null)
+    //                 {
+    //                     RPC_Sit(potentialChairPosition.position, potentialChairPosition.rotation, chair.GetComponent<NetworkObject>());
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+    private void TrySitOnChair()
+{
+    if (IsSitting || !animatorReady) return;
+
+    Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionDistance);
+    foreach (var hitCollider in hitColliders)
+    {
+        if (hitCollider.CompareTag("Chair"))
         {
-            if (hitCollider.CompareTag("Chair"))
+            Chair chair = hitCollider.GetComponent<Chair>();
+            if (chair != null && !chair.IsOccupied)
             {
-                Chair chair = hitCollider.GetComponent<Chair>();
-                if (chair != null && !chair.IsOccupied)
+                Transform potentialChairPosition = hitCollider.transform.Find("ChairPosition");
+                if (potentialChairPosition != null)
                 {
-                    Transform potentialChairPosition = hitCollider.transform.Find("ChairPosition");
-                    if (potentialChairPosition != null)
-                    {
-                        RPC_Sit(potentialChairPosition.position, potentialChairPosition.rotation, chair.GetComponent<NetworkObject>());
-                        break;
-                    }
+                    RPC_Sit(potentialChairPosition.position, potentialChairPosition.rotation, chair.GetComponent<NetworkObject>());
+                    RPC_UpdateSittingState(true); // Trigger the animation state here
+                    break;
                 }
             }
         }
     }
+}
+
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_Sit(Vector3 chairPosition, Quaternion chairRotation, NetworkObject chairObject)
@@ -366,22 +411,35 @@ public class SitOnChair : NetworkBehaviour
         }
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_UpdateSittingState(bool sitting)
+    // [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    // private void RPC_UpdateSittingState(bool sitting)
+    // {
+    //     if (!animatorReady)
+    //     {
+    //         Debug.LogError("Animator is not ready");
+    //         return;
+    //     }
+
+    //     if (!HasStateAuthority)
+    //     {
+    //         Debug.LogError("Cannot send this RPC without State Authority");
+    //         return;
+    //     }
+
+    //     animator.SetBool("isSitting", sitting);
+    // }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+private void RPC_UpdateSittingState(bool sitting)
+{
+    if (!animatorReady)
     {
-        if (!animatorReady)
-        {
-            Debug.LogError("Animator is not ready");
-            return;
-        }
-
-        if (!HasStateAuthority)
-        {
-            Debug.LogError("Cannot send this RPC without State Authority");
-            return;
-        }
-
-        animator.SetBool("isSitting", sitting);
+        Debug.LogError("Animator is not ready");
+        return;
     }
+
+    animator.SetBool("isSitting", sitting);
+}
+
 }
 

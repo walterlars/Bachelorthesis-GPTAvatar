@@ -1567,7 +1567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voiceDetection: 1
-  voiceDetectionThreshold: 0.26
+  voiceDetectionThreshold: 0.12
   voiceDetectionDelayMs: 500
   interestGroup: 0
   useTargetPlayers: 0
@@ -4774,9 +4774,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 921601496}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: 5.8, y: 2.3, z: 3.94}
-  m_LocalScale: {x: -0.22, y: -0.19, z: 4.49}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 2.91, y: 1.62, z: 3.94}
+  m_LocalScale: {x: -0.59, y: -0.5095454, z: 12.041362}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 249482478}
   m_RootOrder: -1
@@ -4822,7 +4822,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e1b3513927984db4d8f1a007ffc61e6e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cb4e77b1b30a6c64b816b60252deb77f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -33738,7 +33738,7 @@ PrefabInstance:
     - target: {fileID: 114806570910798100, guid: d24d1e0a9a798534dbd5865a0679501e,
         type: 3}
       propertyPath: m_Size
-      value: 0
+      value: NaN
       objectReference: {fileID: 0}
     - target: {fileID: 114806570910798100, guid: d24d1e0a9a798534dbd5865a0679501e,
         type: 3}
@@ -34841,6 +34841,7 @@ MonoBehaviour:
   _dialogText: {fileID: 1761706116}
   _statusText: {fileID: 2146791210}
   playerNameText: {fileID: 1271374228}
+  localPlayerName: 
   recordingSprite: {fileID: 21300000, guid: 6a0a061d4ea4fc847bb5b40e61b52714, type: 3}
   stoppedSprite: {fileID: 21300000, guid: b8f7f1adee85e324b9af8d7318c9bc69, type: 3}
   playerNameManager: {fileID: 910155212}

@@ -207,10 +207,14 @@ public class LoadAvatar : NetworkBehaviour
             avatar = args.Avatar;
             avatarAnimator = avatar.GetComponent<Animator>();
             avatar.AddComponent<NetworkObject>();
+          
+
+            avatar = args.Avatar;
 
             if (avatarAnimator != null && animatorController != null)
             {
                 avatarAnimator.runtimeAnimatorController = animatorController;
+                avatar.AddComponent<NetworkAnimatorSetup>();
                 Debug.Log("Animator controller assigned to avatar's Animator.");
             }
             else if (avatarAnimator == null)

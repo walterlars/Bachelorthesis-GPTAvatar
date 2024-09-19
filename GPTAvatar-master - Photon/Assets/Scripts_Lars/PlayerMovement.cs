@@ -139,6 +139,7 @@ using System.Collections;
 using Fusion;
 using UnityEngine;
 using ReadyPlayerMe.Core;
+using TMPro;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -155,10 +156,31 @@ public class PlayerMovement : NetworkBehaviour
 
     private LoadAvatar loadAvatar;
 
+    private TextMeshProUGUI avatarURLText;
+
+
+
     private void Awake()
     {
         StartCoroutine(SearchAnimatorWithDelay());
         _controller = GetComponent<CharacterController>();
+    }
+
+    public string ExtractPartFromURL(string url)
+    {
+        // Define the prefix and suffix to search for
+        string prefix = "https://models.readyplayer.me/";
+        string suffix = ".glb";
+
+        // Find the starting index of the part to extract
+        int startIndex = url.IndexOf(prefix) + prefix.Length;
+        // Find the ending index of the part to extract
+        int endIndex = url.IndexOf(suffix);
+
+        // Extract the part between the prefix and suffix
+        string extractedPart = url.Substring(startIndex, endIndex - startIndex);
+
+        return extractedPart;
     }
 
     private IEnumerator SearchAnimatorWithDelay()
@@ -168,8 +190,12 @@ public class PlayerMovement : NetworkBehaviour
         Debug.Log("2 seconds have passed.");
 
         GameObject root = this.gameObject;
-        loadAvatar = GetComponent<LoadAvatar>();
-        string avatarUrl = loadAvatar.GetAvatar();
+        // loadAvatar = GetComponent<LoadAvatar>();
+        // string avatarUrl = loadAvatar.GetAvatar();
+        Player player = GetComponent<Player>();
+        string avatarURLlong = player.AvatarURL.ToString();
+
+        string avatarUrl = ExtractPartFromURL(avatarURLlong);
         Debug.LogError(avatarUrl);
 
         Transform avatarContainerTransform = root.transform.Find("AvatarContainer");
@@ -244,7 +270,7 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_UpdateWalkingState(bool walking)
     {
         animator.SetBool("Walking", walking);
