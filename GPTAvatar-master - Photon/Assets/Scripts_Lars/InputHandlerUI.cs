@@ -45,18 +45,14 @@ public class InputHandlerUI : MonoBehaviour
             {
                 aiManager.OnForgetButton();
             }
-            //  if(Input.GetKeyDown(KeyCode.N))
-            // {
-            //     aiManager.OnNextFriend();
-            // }
-            //  if(Input.GetKeyDown(KeyCode.B))
-            // {
-            //     aiManager.OnPreviousFriend();
-            // }
-            // if(Input.GetKeyDown(KeyCode.P))
-            // {
-            //     aiManager.RPC_Evaluation();
-            // }
+             if(Input.GetKeyDown(KeyCode.N))
+            {
+                aiManager.OnNextFriend();
+            }
+             if(Input.GetKeyDown(KeyCode.B))
+            {
+                aiManager.OnPreviousFriend();
+            }
         }
     }
 }

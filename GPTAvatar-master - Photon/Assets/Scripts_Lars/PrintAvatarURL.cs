@@ -9,7 +9,6 @@ public class PrintAvatarURL : NetworkBehaviour
 
     private void Start()
     {
-        // Start coroutine to find the local player
         StartCoroutine(FindLocalPlayerCoroutine());
        
 
@@ -31,7 +30,6 @@ public class PrintAvatarURL : NetworkBehaviour
 
     private Player FindLocalPlayer()
     {
-        // Find the local player object in the scene
         foreach (var networkObject in FindObjectsOfType<NetworkObject>())
         {
             if (networkObject.HasInputAuthority)

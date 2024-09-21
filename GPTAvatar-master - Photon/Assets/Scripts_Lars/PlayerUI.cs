@@ -13,7 +13,6 @@ public class PlayerUI : MonoBehaviour
 
     private void Start()
     {
-        // Wait for the player to be spawned
         StartCoroutine(FindLocalPlayerCoroutine());
     }
 
@@ -25,7 +24,6 @@ public class PlayerUI : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
 
-        // Update the UI Text with the player's name when the local player is found
         if (localPlayer != null)
         {
             playerNameText.text = localPlayer.playerName;
@@ -35,7 +33,6 @@ public class PlayerUI : MonoBehaviour
 
     private Player FindLocalPlayer()
     {
-        // Find the local player object in the scene
         foreach (var networkObject in FindObjectsOfType<NetworkObject>())
         {
             if (networkObject.HasInputAuthority)

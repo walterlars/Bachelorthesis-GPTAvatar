@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class CharacterGravityController : MonoBehaviour
 {
-    public float gravity = -9.81f; // Gravity strength
-    public float groundDistance = 0.4f; // Distance to check for the ground
-    public LayerMask groundMask; // Mask to define what is considered ground
+    public float gravity = -9.81f; 
+    public float groundDistance = 0.4f; 
+    public LayerMask groundMask;
     private CharacterController controller;
     private Vector3 velocity;
     private bool isGrounded;
@@ -20,18 +20,15 @@ public class CharacterGravityController : MonoBehaviour
 
     void Update()
     {
-        // Check if the character is grounded
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -2f; // Ensures the character stays grounded
+            velocity.y = -2f; 
         }
 
-        // Apply gravity
         velocity.y += gravity * Time.deltaTime;
 
-        // Move the character
         controller.Move(velocity * Time.deltaTime);
     }
 }
